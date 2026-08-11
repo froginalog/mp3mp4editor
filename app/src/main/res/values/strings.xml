@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MP3/MP4 Editor</string>
+    <string name="channel_jobs_name">Downloads &amp; exports</string>
+    <string name="channel_jobs_desc">Progress for downloads, conversions and trims</string>
+</resources>
