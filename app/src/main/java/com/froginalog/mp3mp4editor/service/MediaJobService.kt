@@ -51,7 +51,7 @@ class MediaJobService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (!started) {
             started = true
-            startForegroundCompat(buildNotification("Preparing…", null, 0))
+            startForegroundCompat(buildNotification("Preparing…", null, 0f))
         }
         return START_NOT_STICKY
     }
