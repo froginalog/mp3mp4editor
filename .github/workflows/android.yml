@@ -22,7 +22,14 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew assembleDebug --console=plain 2>&1 | tee build.log
+
+      # Kotlin errors are otherwise buried thousands of lines above the Gradle stacktrace.
+      - name: Compiler errors
+        if: failure()
+        run: grep -E "^e: |^ERROR:|Duplicate class" build.log | head -60
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

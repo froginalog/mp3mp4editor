@@ -138,8 +138,11 @@ object Mp4Tools {
 
             var firstSampleUs = -1L
             var lastSampleUs = startUs
+            // Tracks don't end together: video may run past endUs while audio still has samples
+            // inside the window, so each track is retired on its own.
+            val finished = HashSet<Int>()
 
-            while (true) {
+            while (finished.size < trackMap.size) {
                 val trackIndex = extractor.sampleTrackIndex
                 if (trackIndex < 0) break
                 val outputTrack = trackMap[trackIndex]
@@ -151,8 +154,8 @@ object Mp4Tools {
                 val sampleTimeUs = extractor.sampleTime
                 if (sampleTimeUs < 0) break
                 if (sampleTimeUs > endUs) {
-                    // Other tracks may still have samples inside the window.
-                    if (!advancePastTrack(extractor, trackMap, endUs)) break
+                    finished += trackIndex
+                    if (!extractor.advance()) break
                     continue
                 }
 
@@ -161,7 +164,7 @@ object Mp4Tools {
                 if (size < 0) break
 
                 if (firstSampleUs < 0) firstSampleUs = sampleTimeUs
-                lastSampleUs = sampleTimeUs
+                lastSampleUs = max(lastSampleUs, sampleTimeUs)
 
                 info.offset = 0
                 info.size = size
@@ -183,20 +186,6 @@ object Mp4Tools {
             runCatching { muxer?.release() }
             runCatching { extractor.release() }
         }
-    }
-
-    /** Advances until every selected track is past [endUs]; false once the input is exhausted. */
-    private fun advancePastTrack(
-        extractor: MediaExtractor,
-        trackMap: Map<Int, Int>,
-        endUs: Long,
-    ): Boolean {
-        while (extractor.advance()) {
-            val track = extractor.sampleTrackIndex
-            if (track < 0) return false
-            if (trackMap.containsKey(track) && extractor.sampleTime in 0..endUs) return true
-        }
-        return false
     }
 
     private fun copyAll(

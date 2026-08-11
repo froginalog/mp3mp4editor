@@ -84,5 +84,9 @@ dependencies {
     // YouTube stream resolution.
     implementation(libs.newpipe.extractor)
     // MP3 encoding (LAME). See README if this fails to resolve from JitPack.
-    implementation(libs.android.lame)
+    implementation(libs.android.lame) {
+        // Its published POM still lists the pre-AndroidX support library, which collides with
+        // androidx.core/androidx.media at dex time. The AAR itself only needs the JNI wrapper.
+        exclude(group = "com.android.support")
+    }
 }
