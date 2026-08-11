@@ -127,7 +127,7 @@ class JobManager(
 
             update(id) { it.copy(status = "Downloading video…") }
             downloader.download(spec.choice.video.url, videoFile, cancelled) { done, total ->
-                reportDownload(id, done, total, 0f, downloadShare)
+                reportDownload(id, "Downloading video", done, total, 0f, downloadShare)
             }
 
             var merged: File? = null
@@ -137,7 +137,7 @@ class JobManager(
                 val audioFile = Files.newTempFile(context, ".m4a").also { temps += it }
                 update(id) { it.copy(status = "Downloading audio…") }
                 downloader.download(audio.source.url, audioFile, cancelled) { done, total ->
-                    reportDownload(id, done, total, downloadShare, 0.8f)
+                    reportDownload(id, "Downloading audio", done, total, downloadShare, 0.8f)
                 }
 
                 if (cancelled()) throw InterruptedException()
@@ -169,8 +169,9 @@ class JobManager(
         try {
             val sourceFile = Files.newTempFile(context, ".${spec.audio.source.suffix}").also { temps += it }
             update(id) { it.copy(status = "Downloading audio…") }
+            val downloadShare = if (spec.format is OutputFormat.Mp3) 0.6f else 0.9f
             downloader.download(spec.audio.source.url, sourceFile, cancelled) { done, total ->
-                reportDownload(id, done, total, 0f, if (spec.format is OutputFormat.Mp3) 0.6f else 0.9f)
+                reportDownload(id, "Downloading audio", done, total, 0f, downloadShare)
             }
             if (cancelled()) throw InterruptedException()
 
@@ -284,18 +285,24 @@ class JobManager(
 
     // -- state plumbing --------------------------------------------------------------------
 
-    private fun reportDownload(id: Long, done: Long, total: Long, from: Float, to: Float) {
+    private fun reportDownload(
+        id: Long,
+        label: String,
+        done: Long,
+        total: Long,
+        from: Float,
+        to: Float,
+    ) {
         if (total > 0) {
             val fraction = (done.toFloat() / total).coerceIn(0f, 1f)
             update(id) {
                 it.copy(
                     progress = from + fraction * (to - from),
-                    status = "${it.status.substringBefore(" · ")} · " +
-                        "${TimeFmt.bytes(done)} / ${TimeFmt.bytes(total)}",
+                    status = "$label · ${TimeFmt.bytes(done)} / ${TimeFmt.bytes(total)}",
                 )
             }
         } else {
-            update(id) { it.copy(progress = null, status = "Downloading… ${TimeFmt.bytes(done)}") }
+            update(id) { it.copy(progress = null, status = "$label · ${TimeFmt.bytes(done)}") }
         }
     }
 
