@@ -12,10 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Movie
-import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,10 +29,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.froginalog.mp3mp4editor.R
 import com.froginalog.mp3mp4editor.media.OutputEntry
 import com.froginalog.mp3mp4editor.ui.common.openMedia
 import com.froginalog.mp3mp4editor.ui.common.shareMedia
@@ -84,7 +82,7 @@ fun LibraryScreen(
             ) {
                 Text("Library", style = MaterialTheme.typography.headlineSmall)
                 IconButton(onClick = viewModel::refresh) {
-                    Icon(Icons.Filled.Refresh, contentDescription = "Refresh")
+                    Icon(painterResource(R.drawable.ic_refresh), contentDescription = "Refresh")
                 }
             }
         }
@@ -108,7 +106,7 @@ fun LibraryScreen(
                 Column(Modifier.padding(14.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            if (entry.isVideo) Icons.Filled.Movie else Icons.Filled.MusicNote,
+                            if (entry.isVideo) painterResource(R.drawable.ic_movie) else painterResource(R.drawable.ic_music_note),
                             contentDescription = null,
                         )
                         Spacer(Modifier.size(10.dp))

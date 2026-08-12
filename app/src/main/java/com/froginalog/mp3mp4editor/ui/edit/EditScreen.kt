@@ -18,11 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FolderOpen
-import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -47,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -55,6 +51,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import com.froginalog.mp3mp4editor.R
 import com.froginalog.mp3mp4editor.media.OutputFormat
 import com.froginalog.mp3mp4editor.ui.common.JobCard
 import com.froginalog.mp3mp4editor.ui.common.openMedia
@@ -131,7 +128,7 @@ fun EditScreen(viewModel: EditViewModel = viewModel()) {
                 OutlinedButton(onClick = {
                     picker.launch(arrayOf("video/*", "audio/*"))
                 }) {
-                    Icon(Icons.Filled.FolderOpen, contentDescription = null)
+                    Icon(painterResource(R.drawable.ic_folder_open), contentDescription = null)
                     Spacer(Modifier.size(8.dp))
                     Text("Open file")
                 }
@@ -184,7 +181,7 @@ fun EditScreen(viewModel: EditViewModel = viewModel()) {
                         )
                     } else {
                         Icon(
-                            Icons.Filled.MusicNote,
+                            painterResource(R.drawable.ic_music_note),
                             contentDescription = null,
                             modifier = Modifier.size(48.dp),
                         )
@@ -215,7 +212,7 @@ fun EditScreen(viewModel: EditViewModel = viewModel()) {
                         }
                     }) {
                         Icon(
-                            if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                            if (isPlaying) painterResource(R.drawable.ic_pause) else painterResource(R.drawable.ic_play_arrow),
                             contentDescription = if (isPlaying) "Pause" else "Play",
                         )
                     }

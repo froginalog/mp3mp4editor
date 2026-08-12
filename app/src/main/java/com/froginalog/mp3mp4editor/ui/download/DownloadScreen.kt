@@ -13,9 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentPaste
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -37,11 +34,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.froginalog.mp3mp4editor.R
 import com.froginalog.mp3mp4editor.ui.common.JobCard
 import com.froginalog.mp3mp4editor.ui.common.openMedia
 import com.froginalog.mp3mp4editor.util.TimeFmt
@@ -87,7 +86,7 @@ fun DownloadScreen(
                     IconButton(onClick = {
                         clipboard.getText()?.text?.let { viewModel.setUrl(it) }
                     }) {
-                        Icon(Icons.Filled.ContentPaste, contentDescription = "Paste")
+                        Icon(painterResource(R.drawable.ic_content_paste), contentDescription = "Paste")
                     }
                 },
             )
@@ -102,7 +101,7 @@ fun DownloadScreen(
                     if (state.loading) {
                         CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
                     } else {
-                        Icon(Icons.Filled.Search, contentDescription = null)
+                        Icon(painterResource(R.drawable.ic_search), contentDescription = null)
                     }
                     Spacer(Modifier.size(8.dp))
                     Text(if (state.loading) "Looking up…" else "Find formats")

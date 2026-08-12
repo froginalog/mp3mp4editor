@@ -1,11 +1,8 @@
 package com.froginalog.mp3mp4editor.ui
 
 import android.net.Uri
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentCut
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -15,24 +12,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.froginalog.mp3mp4editor.R
 import com.froginalog.mp3mp4editor.ui.download.DownloadScreen
 import com.froginalog.mp3mp4editor.ui.edit.EditScreen
 import com.froginalog.mp3mp4editor.ui.edit.PendingEdit
 import com.froginalog.mp3mp4editor.ui.library.LibraryScreen
 
-private data class Tab(val route: String, val label: String, val icon: ImageVector)
+private data class Tab(val route: String, val label: String, @DrawableRes val icon: Int)
 
 private val TABS = listOf(
-    Tab("download", "Get", Icons.Filled.Download),
-    Tab("edit", "Trim", Icons.Filled.ContentCut),
-    Tab("library", "Library", Icons.Filled.LibraryMusic),
+    Tab("download", "Get", R.drawable.ic_download),
+    Tab("edit", "Trim", R.drawable.ic_content_cut),
+    Tab("library", "Library", R.drawable.ic_library_music),
 )
 
 @Composable
@@ -70,7 +68,7 @@ fun AppRoot(
                                 restoreState = true
                             }
                         },
-                        icon = { Icon(tab.icon, contentDescription = tab.label) },
+                        icon = { Icon(painterResource(tab.icon), contentDescription = tab.label) },
                         label = { Text(tab.label) },
                     )
                 }
