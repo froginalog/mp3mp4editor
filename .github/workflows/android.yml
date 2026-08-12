@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -38,3 +40,17 @@ jobs:
           name: mp3mp4editor-debug
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+
+      # A rolling release so the APK has a stable, direct download link that a phone browser can
+      # open — Actions artifacts are login-gated zips, which phones handle badly.
+      - name: Publish rolling debug release
+        if: github.ref_name == 'claude/youtube-export-android-app-f9wsiq'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp "$(ls app/build/outputs/apk/debug/*.apk | head -1)" mp3mp4editor-debug.apk
+          gh release delete debug-latest --yes --cleanup-tag || true
+          gh release create debug-latest mp3mp4editor-debug.apk \
+            --target "$GITHUB_SHA" \
+            --title "Debug build" \
+            --notes "Debug APK built from $GITHUB_SHA. Unsigned debug build for sideloading."
